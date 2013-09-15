@@ -1,0 +1,34 @@
+http://www.calvin.edu/academic/cas/gpa/goering1.htm
+
+Thema:
+Firmware Entwicklung Embedded Systems für elektronische Energiezähler & Kommunikationsgeräte (Powerline)
+Analyse, Design, Kodierung und Test von Softwaremodulen
+
+Angaben zum Kunden:
+Das Projekt ist bei Elster (Deutschland) für Enexis (Niederlande) abwickelt. Es ist ein "pilot"-Projekt, dass heißt, 
+Enexis hat erst nur 1000 elektronische Energiezähler vor zu installieren. Diese Energiezähler verwenden das Stromnetz 
+um zu kommunizieren und zwar das G3 Protokoll. Nach dem wir analysieren, wie alle Geräte sich verhalten, können wir einen weiteres Auftrag annehmen,
+den "Linky G3" Energiezähler. Informationen im Internet: http://www.metering.com/node/21643
+Für diese Projekte verwendet Elster Hardware und Software vom: STMicroelectronics (Switzerland), Texas Instruments (USA), ANDREA Informatique (Frankreich).
+Elster befindet sich in Deutschland: Steinern Straße 19-21  55252 Mainz-Kastel.
+Enexis befindet sich in Niederlande: Burgemeester Burgerslaan 40  5245 NH Rosmalen.
+
+Tools / Arbeitsmittel:
+Compiler: Keil
+Managementsystemen zur Versionsführung und Bug Tracking: SVN, JIRA
+Qualitätssicherung: QAC++
+
+Projektdauer:
+Das "pilot"-Projekt ist im September 2012 gestarted und im Mai 2013 schon vollendet. Wir entwicklen nun die Firmware für das Linky G3 Projekt.
+
+Projektbeurteilung:
+Das Projekt ist durch großes Engagement erfolgreich. Wir haben mehrere herausfordernde Probleme gehabt, aber wir haben es geschafft.
+
+Beschreibung:
+Unser Team entwickelt PLC G3 elektronische Zähler im Haushaltsbereich. Die besondere Eingeschaften dieses Zählers sind: 
+hohe Messgenauigkeit und Smart Metering. Meine Tätigkeiten sind sehr verschiedene: um die Firmware zu entwicklen mussen wir
+die vorhandene Lösungen anpassen, die vorhandene und neue Eigenschaften testen, mit dem Kunden regelmäßig besprechen.
+Es gibt viele Spezifikationen und Normen, die wir beachten müssen. Die Zähler sind hochfunktional und 
+müssen zertifiziert sein.
+
+
