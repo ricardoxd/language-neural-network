@@ -2512,3 +2512,22 @@ Ich bin durstig.
 aufgestanden
 auftehen
 
+atmungsaktiv
+breathable
+
+trocknend
+drying
+
+feuchtigkeitsregulierend
+moisture adjusting
+
+leicht
+light
+easy
+
+komfortabel
+comfortable
+
+Aufwertung
+Abwertung
+Bewertung

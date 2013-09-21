@@ -10,8 +10,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class TextNeuralNetwork {
     private HashMap<String, TextNeuralNetworkEntry> data;
@@ -97,13 +100,7 @@ public class TextNeuralNetwork {
             String key = mapEntry.getKey();
             sb.append(key).append(NEWLINE);
             TextNeuralNetworkEntry textnnetEntry = mapEntry.getValue();
-            for (TextNeuralNetworkEntry connectionEntry : textnnetEntry.connectionList()) {
-                sb.append(connectionEntry.key()).append(NEWLINE);
-            }
-            if (textnnetEntry.connectionListOverflow()) {
-                sb.append("...").append(NEWLINE);
-            }
-            sb.append(NEWLINE);
+            textnnetEntry.appendConnectionText(sb);
         }
         outputStream.write(sb.toString());
         outputStream.close();
@@ -149,6 +146,10 @@ public class TextNeuralNetwork {
     
     public TextNeuralNetworkEntry getEntry(String key) {
         return data.get(key);
+    }
+    
+    public ArrayList<TextNeuralNetworkEntry> getEntryList() {
+        return new ArrayList<TextNeuralNetworkEntry>(this.data.values());
     }
     
     public void deleteEntry(String key) {

@@ -7,6 +7,7 @@ public class TextNeuralNetworkEntry {
     private ArrayList<TextNeuralNetworkEntry> connectionList;
     public static final int MAX_CONNECTION_LIST_SIZE = 1 << 3;
     private boolean connectionListOverflow;
+    private int counter;
     
     public String key() {
         return key;
@@ -75,6 +76,33 @@ public class TextNeuralNetworkEntry {
     
     public void deleteConnection(TextNeuralNetworkEntry connectionEntry) {
         connectionList.remove(connectionEntry);
+    }
+    
+    public void appendConnectionText(StringBuilder sb) {
+        for (TextNeuralNetworkEntry connectionEntry : this.connectionList) {
+            sb.append(connectionEntry.key()).append(TextNeuralNetwork.NEWLINE);
+        }
+        if (this.connectionListOverflow) {
+            sb.append("...").append(TextNeuralNetwork.NEWLINE);
+        }
+        sb.append(TextNeuralNetwork.NEWLINE);
+
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public void resetCounter() {
+        this.counter = 0;
+    }
+
+    public void incrementCounter() {
+        this.counter++;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 }
 
