@@ -1,20 +1,20 @@
 package languageneuralnetwork;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.KeyAdapter;
-
 import java.awt.event.KeyEvent;
 
-import java.io.FileNotFoundException;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 
 import java.util.ArrayList;
 
@@ -24,17 +24,19 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.BadLocationException;
+
 
 public class MainFrame extends JFrame {
     private BorderLayout layoutMain = new BorderLayout();
@@ -54,10 +56,12 @@ public class MainFrame extends JFrame {
     private JTextArea textAreaConnectionText = new JTextArea();
     private JTextField textFieldKeyText = new JTextField();
     private JButton buttonConnectEntry = new JButton();
-    private JLabel labelTextNNetInfo = new JLabel();
+    private JLabel labelStatus = new JLabel();
     private JButton buttonDeleteEntry = new JButton();
     private JMenu menuData = new JMenu();
     private JButton buttonClearEntryText = new JButton();
+    private JProgressBar progressBar = new JProgressBar();
+    private JButton buttonStartStopIteration = new JButton();
 
     public MainFrame() {
         try {
@@ -70,8 +74,10 @@ public class MainFrame extends JFrame {
         connectionTextSync = true;
     }
     
-    private TextNeuralNetwork textnnet;
+    private transient TextNeuralNetwork textnnet;
     private boolean connectionTextSync;
+    private transient TextNeuralNetworkIterator textnnetIterator;
+    public static final String RUNTIME_DATA = "runtime_data.txt";
     
     public void setTextNeuralNetwork(TextNeuralNetwork textnnet) {
         this.textnnet = textnnet;
@@ -81,7 +87,7 @@ public class MainFrame extends JFrame {
         this.setJMenuBar( menuBar );
         this.getContentPane().setLayout( layoutMain );
         panelCenter.setLayout( null );
-        this.setSize(new Dimension(650, 350));
+        this.setSize(new Dimension(600, 400));
         this.setTitle( "Language Neural Network" );
         menuFile.setText( "File" );
         menuFileExit.setText( "Exit" );
@@ -111,16 +117,18 @@ public class MainFrame extends JFrame {
                 }
             });
         textAreaConnectionText.setBounds(new Rectangle(5, 35, 370, 200));
-        textAreaConnectionText.setFont(new Font("Courier New", 0, 16));
+        textAreaConnectionText.setFont(new Font("Tahoma", 0, 16));
         textAreaConnectionText.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         textAreaConnectionText.setAutoscrolls(false);
+        textAreaConnectionText.setEnabled(false);
         textAreaConnectionText.addKeyListener(new KeyAdapter() {
                 public void keyReleased(KeyEvent e) {
                     textAreaConnectionText_keyReleased(e);
                 }
             });
         textFieldKeyText.setBounds(new Rectangle(5, 5, 370, 25));
-        textFieldKeyText.setFont(new Font("Courier New", 0, 16));
+        textFieldKeyText.setFont(new Font("Tahoma", 0, 16));
+        textFieldKeyText.setEnabled(false);
         textFieldKeyText.addKeyListener(new KeyAdapter() {
                 public void keyReleased(KeyEvent e) {
                     textFieldKeyText_keyReleased(e);
@@ -133,8 +141,9 @@ public class MainFrame extends JFrame {
                     buttonConnectEntry_actionPerformed(e);
                 }
             });
-        labelTextNNetInfo.setText("Open text neural network file");
-        labelTextNNetInfo.setBounds(new Rectangle(10, 245, 590, 15));
+        labelStatus.setBounds(new Rectangle(10, 245, 590, 45));
+        labelStatus.setVerticalAlignment(SwingConstants.TOP);
+        labelStatus.setVerticalTextPosition(SwingConstants.TOP);
         buttonDeleteEntry.setText("Delete");
         buttonDeleteEntry.setBounds(new Rectangle(490, 5, 70, 25));
         buttonDeleteEntry.addActionListener(new ActionListener() {
@@ -150,6 +159,14 @@ public class MainFrame extends JFrame {
                     buttonClearEntryText_actionPerformed(e);
                 }
             });
+        progressBar.setBounds(new Rectangle(5, 300, 585, 15));
+        buttonStartStopIteration.setText("Start iteration");
+        buttonStartStopIteration.setBounds(new Rectangle(380, 65, 180, 25));
+        buttonStartStopIteration.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    buttonStartStopIteration_actionPerformed(e);
+                }
+            });
         menuFile.add( menuFileExit );
         menuBar.add( menuFile );
         menuBar.add(menuData);
@@ -158,13 +175,15 @@ public class MainFrame extends JFrame {
         toolBar.add(buttonSave);
         toolBar.add(buttonHelp);
         this.getContentPane().add(toolBar, BorderLayout.NORTH);
+        panelCenter.add(buttonStartStopIteration, null);
+        panelCenter.add(progressBar, null);
         panelCenter.add(buttonClearEntryText, null);
         panelCenter.add(buttonDeleteEntry, null);
         panelCenter.add(buttonConnectEntry, null);
         panelCenter.add(textFieldKeyText, null);
         panelCenter.add(textAreaConnectionText, null);
         panelCenter.add(buttonSaveEntry, null);
-        panelCenter.add(labelTextNNetInfo, null);
+        panelCenter.add(labelStatus, null);
         this.getContentPane().add(panelCenter, BorderLayout.CENTER);
     }
 
@@ -204,7 +223,7 @@ public class MainFrame extends JFrame {
             this.open();
         }
         
-        System.out.println(textnnet);
+        System.out.println(this.textnnet);
 
         updateTitle();
         updateTextNNetInfo();
@@ -212,7 +231,11 @@ public class MainFrame extends JFrame {
     
     private void open() {
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt");
+        FileNameExtensionFilter filter;
+        filter = new FileNameExtensionFilter("Text files", "txt");
+        File dir;
+        dir = new File(this.getRuntimeData());
+        chooser.setCurrentDirectory(dir);
         chooser.setFileFilter(filter);
         int returnVal = chooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -220,6 +243,9 @@ public class MainFrame extends JFrame {
             this.textnnet = new TextNeuralNetwork();
             try {
                 this.textnnet.open(filename);
+                this.textFieldKeyText.setEnabled(true);
+                this.textAreaConnectionText.setEnabled(true);
+                this.saveRuntimeData(filename);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().toString(),
                                               JOptionPane.ERROR_MESSAGE);
@@ -228,6 +254,29 @@ public class MainFrame extends JFrame {
                                               JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private void saveRuntimeData(String textnnetFilename) {
+        try {
+            BufferedWriter outputStream = new BufferedWriter(new FileWriter(MainFrame.RUNTIME_DATA));
+            outputStream.write(textnnetFilename);
+            outputStream.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().toString(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private String getRuntimeData() {
+        String result = null;
+        try {
+            BufferedReader inputStream = new BufferedReader(new FileReader(MainFrame.RUNTIME_DATA));
+            String line = inputStream.readLine();
+            result = line;
+            inputStream.close();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().toString(), JOptionPane.ERROR_MESSAGE);
+        }
+        return result;
     }
 
     private void updateTitle() {
@@ -305,7 +354,7 @@ public class MainFrame extends JFrame {
     }
     
     private void updateTextNNetInfo() {
-        labelTextNNetInfo.setText("Entry set size: " + textnnet.entrySetSize());
+        labelStatus.setText("Entry set size: " + textnnet.entrySetSize());
     }
 
     private void buttonShowConnectionList_actionPerformed(ActionEvent e) {
@@ -314,7 +363,7 @@ public class MainFrame extends JFrame {
         TextNeuralNetworkEntry entry = textnnet.getEntry(key);
         if (entry != null) {
             textAreaConnectionText.setText(textAreaConnectionText(entry));
-            labelTextNNetInfo.setText("Connection list size: " + entry.connectionList().size());
+            labelStatus.setText("Connection list size: " + entry.connectionList().size());
         } else {
             JOptionPane.showMessageDialog(this, "Invalid textnnet entry", "Connection list show failure",
                                           JOptionPane.ERROR_MESSAGE);
@@ -365,8 +414,10 @@ public class MainFrame extends JFrame {
                 TextNeuralNetworkEntry entry = textnnet.getEntry(key);
                 if (entry != null) {
                     textAreaConnectionText.setText(textAreaConnectionText(entry));
+                    setStatus("Key found.");
                 } else {
                     textAreaConnectionText.setText("");
+                    setStatus("Key not found.");
                 }
             }
         }
@@ -379,5 +430,32 @@ public class MainFrame extends JFrame {
     private void buttonClearEntryText_actionPerformed(ActionEvent e) {
         textAreaConnectionText.setText("");
         connectionTextSync = true;
+    }
+    
+    private void setStatus(String text) {
+        labelStatus.setText(text);
+    }
+
+    private void buttonStartStopIteration_actionPerformed(ActionEvent e) {
+        if (this.textnnetIterator == null) {
+            this.textnnetIterator = new TextNeuralNetworkIterator();
+            this.textnnetIterator.setTextnnetEntryList(this.textnnet.getEntryList());
+            this.textnnetIterator.setTextFieldKeyText(this.textFieldKeyText);
+            this.textnnetIterator.setTextAreaConnectionText(this.textAreaConnectionText);
+            this.textnnetIterator.setLabelStatus(this.labelStatus);
+        }
+        
+        switch (this.textnnetIterator.getState()) {
+        case NEW:
+            this.textnnetIterator.start();
+            this.buttonStartStopIteration.setText("Stop iteration");
+            this.progressBar.setValue(50);
+            break;
+        default:
+            this.textnnetIterator.setContinueFlagFalse();
+            this.textnnetIterator = null;
+            this.buttonStartStopIteration.setText("Start iteration");
+            break;
+        }
     }
 }
