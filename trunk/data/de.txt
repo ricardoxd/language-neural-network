@@ -2510,7 +2510,7 @@ ihre
 Ich bin durstig.
 
 aufgestanden
-auftehen
+aufstehen
 
 atmungsaktiv
 breathable
@@ -2531,3 +2531,215 @@ comfortable
 Aufwertung
 Abwertung
 Bewertung
+
+Wirkleistung
+Blindleistung
+Scheinleistung
+
+Wirkleistung
+active power
+
+active power
+W
+
+Blindleistung
+reactive power
+
+reactive power
+var
+
+Scheinleistung
+apparent power
+
+apparent power
+VA
+
+Widerstand
+resistance
+
+absetzen
+to set down
+to go away
+abziehen
+entlassen
+
+Lugner
+liar
+
+Betriebsklima
+das
+stören
+
+stören
+gestört
+
+Beweis
+der
+beweisen
+proof
+
+abmahnen
+warn
+gehoben
+
+gehoben
+Adjektif
+polite
+
+Vorgesetzter
+supervisor
+
+Mobbing
+das
+to mob
+bullying
+harassment
+
+innuendo
+insinuare
+Anspielung
+
+kontern
+a contracara
+
+tatsächlich
+actually
+
+lediglich
+nur
+only
+merely
+simply
+
+reagieren
+
+abweisend
+unfreundlich
+
+von denen
+from those
+
+wegen dessen
+because of this
+
+Formalität
+die
+formality
+
+Ersatzkraft
+
+erstrecken
+to extend
+to expand
+
+von den Substantiv Plural
+
+sich wehren
+to fight
+to resist
+
+Blaumacher
+wer sich bei unangenehmen Aufgaben krank sich meldet
+
+verplappern
+sich
+Umgangsprache
+etwas unabsichtlich preisgeben
+
+Indiz
+das
+Hinweis
+Andeutung
+
+Hinweis
+der
+
+verraten
+to reveal
+to betray
+
+Eingliederung
+incorporation
+
+Stellenabbau
+Auftragseinbruch
+Wirtschaftskrise
+
+Auftragseinbruch
+order reduction
+
+senken
+to reduce
+Kosten
+
+woanders
+somewhere else
+
+hierfür
+for this purpose
+
+Dauer der Betriebszugehörigkeit
+
+benötigen
+to need
+
+sogar
+even
+
+bewahren
+to keep
+
+begleiten
+to go with
+
+vernünftig
+rational
+sane
+
+Straftat
+die
+offense
+
+erheblich
+significant
+
+Weigerung
+refusal
+
+keinesfalls
+never
+--
+
+Floskel
+die
+nichts sagende Worte
+
+Ausrede
+die
+excuse
+
+stattdessen
+anstelle
+alternativ
+rather
+
+Aussage
+statement
+
+vermeiden
+to avoid
+to avert
+
+nachhaltig
+dauernd
+
+geschädigt
+ruined
+
+Grauzone
+die
+
+weigern
+to refuse
+
+
