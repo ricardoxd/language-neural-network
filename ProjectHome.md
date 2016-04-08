@@ -1,0 +1,1 @@
+The main idea of this project is to contruct a neural network with as many as possible natural words, expressions and use it for learning.
